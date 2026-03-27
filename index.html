@@ -6,358 +6,586 @@
     <title>NANO AI Security — AI Red Team & Security Audits</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #0d0d0d;
+            --bg-tertiary: #1a1a1a;
+            --accent: #00ff88;
+            --accent-dim: rgba(0, 255, 136, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif; 
-            background: #000; 
-            color: #f5f5f7; 
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; 
+            background: var(--bg-primary); 
+            color: var(--text-primary); 
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
-        /* macOS Dark Header */
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-logo {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+        
+        .nav-logo span { color: var(--accent); }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover { color: var(--accent); }
+        
+        /* Hero Section */
         header { 
-            background: linear-gradient(180deg, rgba(28,28,30,0.95) 0%, rgba(44,44,46,0.9) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding: 100px 20px 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
             overflow: hidden;
+            padding: 100px 20px;
         }
         
-        /* Hacker Matrix Effect Background */
-        header::before {
-            content: '';
+        /* Animated Grid Background */
+        .grid-bg {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(0,255,136,0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(0,255,136,0.03) 0%, transparent 50%);
-            pointer-events: none;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.3;
+            animation: gridMove 20s linear infinite;
         }
         
-        .header-content { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(60px); }
+        }
         
-        .logo { 
-            font-size: 3em; 
+        .hero-content { 
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 980px;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 30px;
+        }
+        
+        .hero-title { 
+            font-size: clamp(3em, 8vw, 6em);
             font-weight: 700; 
-            margin-bottom: 15px;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #fff 0%, #86868b 100%);
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #fff 30%, #666 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         
-        .logo span { 
-            color: #00ff88;
-            -webkit-text-fill-color: #00ff88;
-            text-shadow: 0 0 30px rgba(0,255,136,0.5);
+        .hero-title .highlight {
+            color: var(--accent);
+            -webkit-text-fill-color: var(--accent);
+            text-shadow: 0 0 60px rgba(0, 255, 136, 0.5);
         }
         
-        .tagline { 
-            font-size: 1.4em; 
-            color: #86868b; 
+        .hero-subtitle { 
+            font-size: clamp(1.2em, 3vw, 1.5em);
+            color: var(--text-secondary); 
             font-weight: 400; 
-            margin-bottom: 40px;
-            letter-spacing: 0.01em;
+            margin-bottom: 50px;
+            line-height: 1.5;
         }
         
-        .cta-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+        .hero-cta { 
+            display: flex; 
+            gap: 15px; 
+            justify-content: center;
+            flex-wrap: wrap;
+        }
         
         .btn { 
-            padding: 14px 28px; 
-            border-radius: 980px; 
+            padding: 16px 32px; 
+            border-radius: 12px; 
             text-decoration: none; 
-            font-weight: 500; 
-            font-size: 17px;
+            font-weight: 600; 
+            font-size: 16px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .btn-primary { 
-            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            background: var(--accent);
             color: #000;
-            box-shadow: 0 4px 20px rgba(0,255,136,0.3);
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
         }
         .btn-primary:hover { 
-            transform: scale(1.02);
-            box-shadow: 0 6px 30px rgba(0,255,136,0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 0 60px rgba(0, 255, 136, 0.5);
         }
         
         .btn-secondary { 
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
         }
         .btn-secondary:hover { 
-            background: rgba(255,255,255,0.15);
-            transform: scale(1.02);
+            border-color: var(--accent);
+            color: var(--accent);
         }
 
         /* Sections */
-        section { padding: 100px 20px; }
+        section { padding: 120px 20px; }
         .container { max-width: 1200px; margin: 0 auto; }
         
-        h2 { 
-            font-size: 3em; 
-            font-weight: 700; 
-            margin-bottom: 60px; 
-            text-align: center; 
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #fff 0%, #86868b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
         }
         
-        /* About - Glassmorphism Cards */
-        .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-        .about-card { 
-            background: rgba(28,28,30,0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 40px; 
-            border-radius: 20px; 
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s;
+        .section-label {
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 15px;
         }
-        .about-card:hover {
-            border-color: rgba(0,255,136,0.3);
-            transform: translateY(-5px);
+        
+        .section-title { 
+            font-size: clamp(2.5em, 5vw, 4em); 
+            font-weight: 700; 
+            letter-spacing: -0.03em;
         }
-        .about-card h3 { 
-            font-size: 1.7em; 
-            margin-bottom: 15px; 
-            color: #fff;
-            letter-spacing: -0.01em;
-        }
-        .about-card p { color: #86868b; line-height: 1.8; font-size: 17px; }
-        .about-card strong { color: #00ff88; }
-
-        /* Services - Terminal Style */
+        
+        /* Services */
         .services { 
-            background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
-            border-top: 1px solid rgba(255,255,255,0.05);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        
+        .services-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 20px; 
+        }
+        
         .service-card { 
-            background: rgba(28,28,30,0.8);
-            padding: 35px; 
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.08);
-            transition: all 0.3s;
+            background: var(--bg-primary);
+            padding: 40px; 
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
+        
         .service-card::before {
-            content: '$';
+            content: '';
             position: absolute;
-            top: 20px;
-            right: 25px;
-            font-size: 2em;
-            color: rgba(0,255,136,0.2);
-            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            transform: scaleX(0);
+            transition: transform 0.4s;
         }
+        
         .service-card:hover { 
-            border-color: rgba(0,255,136,0.4);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(0,255,136,0.1);
+            border-color: rgba(0, 255, 136, 0.4);
+            transform: translateY(-8px);
         }
-        .service-icon { font-size: 3em; margin-bottom: 20px; }
+        
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .service-icon { 
+            font-size: 3em; 
+            margin-bottom: 25px;
+            display: block;
+        }
+        
         .service-card h3 { 
             font-size: 1.5em; 
-            margin-bottom: 12px; 
-            color: #fff;
-            letter-spacing: -0.01em;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
-        .service-card p { color: #86868b; margin-bottom: 20px; font-size: 16px; }
+        
+        .service-card p { 
+            color: var(--text-secondary); 
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+        
+        .service-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 25px;
+            border-top: 1px solid var(--border);
+        }
+        
         .price { 
-            font-size: 1.5em; 
-            color: #00ff88; 
+            font-size: 1.3em; 
+            color: var(--accent); 
             font-weight: 600;
             font-family: 'SF Mono', 'Monaco', monospace;
         }
+        
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--accent-dim);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 20px;
+            padding: 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin: 80px 0;
+        }
+        
+        .stat-item { text-align: center; }
+        .stat-number {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-        /* Cases - Code Block Style */
-        .cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        /* Cases */
+        .cases-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); 
+            gap: 25px; 
+        }
+        
         .case-card { 
-            background: rgba(28,28,30,0.6);
-            padding: 35px; 
-            border-radius: 16px; 
-            border: 1px solid rgba(255,255,255,0.08);
-            font-family: 'SF Mono', 'Monaco', monospace;
-        }
-        .case-card h3 { 
-            font-size: 1.4em; 
-            margin-bottom: 8px; 
-            color: #00ff88;
-            font-family: 'SF Mono', 'Monaco', monospace;
-        }
-        .case-card .client { 
-            color: #5e5e60; 
-            font-size: 0.85em; 
-            margin-bottom: 20px;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-        .case-card p { color: #86868b; margin-bottom: 20px; font-size: 15px; }
-        .case-stats { display: flex; gap: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); }
-        .stat { text-align: left; }
-        .stat-value { font-size: 1.8em; font-weight: 700; color: #00ff88; font-family: 'SF Mono', 'Monaco', monospace; }
-        .stat-label { font-size: 0.8em; color: #5e5e60; text-transform: uppercase; letter-spacing: 0.05em; }
-
-        /* Cluster - Apple Pro Style */
-        .cluster { 
-            background: linear-gradient(180deg, #0a0a0a 0%, #1c1c1e 100%);
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-        .cluster-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .cluster-card { 
-            background: rgba(255,255,255,0.03);
-            padding: 30px; 
-            border-radius: 18px; 
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.06);
+            background: var(--bg-secondary);
+            padding: 40px; 
+            border-radius: 20px; 
+            border: 1px solid var(--border);
             transition: all 0.3s;
         }
-        .cluster-card:hover {
-            border-color: rgba(0,255,136,0.3);
-            background: rgba(0,255,136,0.05);
+        
+        .case-card:hover {
+            border-color: rgba(0, 255, 136, 0.3);
         }
+        
+        .case-card h3 { 
+            font-size: 1.4em; 
+            margin-bottom: 10px; 
+            color: var(--accent);
+            font-family: 'SF Mono', 'Monaco', monospace;
+        }
+        
+        .case-meta { 
+            color: var(--text-secondary); 
+            font-size: 0.9em; 
+            margin-bottom: 20px;
+        }
+        
+        .case-card p { 
+            color: var(--text-secondary); 
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+        
+        .case-stats { 
+            display: flex; 
+            gap: 30px; 
+            padding-top: 25px; 
+            border-top: 1px solid var(--border); 
+        }
+        
+        .stat { text-align: left; }
+        .stat-value { 
+            font-size: 1.6em; 
+            font-weight: 700; 
+            color: var(--text-primary);
+            font-family: 'SF Mono', 'Monaco', monospace;
+        }
+        .stat-label { 
+            font-size: 0.75em; 
+            color: var(--text-secondary); 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em;
+            margin-top: 5px;
+        }
+
+        /* Cluster */
+        .cluster { 
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+        }
+        
+        .cluster-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 20px; 
+        }
+        
+        .cluster-card { 
+            background: var(--bg-primary);
+            padding: 35px; 
+            border-radius: 18px; 
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        
+        .cluster-card:hover {
+            border-color: rgba(0, 255, 136, 0.3);
+            transform: translateY(-5px);
+        }
+        
         .cluster-card h3 { 
             font-size: 1.3em; 
-            margin-bottom: 12px; 
-            color: #fff;
-            letter-spacing: -0.01em;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
-        .cluster-card .specs { color: #86868b; font-size: 15px; line-height: 1.8; }
+        
+        .cluster-card .specs { 
+            color: var(--text-secondary); 
+            font-size: 14px; 
+            line-height: 2;
+        }
+        
         .cluster-total { 
             grid-column: 1 / -1; 
-            background: linear-gradient(135deg, rgba(0,255,136,0.15) 0%, rgba(0,204,106,0.1) 100%);
-            padding: 40px; 
+            background: linear-gradient(135deg, var(--accent-dim) 0%, rgba(0, 255, 136, 0.05) 100%);
+            padding: 50px; 
             border-radius: 20px; 
             text-align: center; 
             margin-top: 25px;
-            border: 1px solid rgba(0,255,136,0.3);
+            border: 1px solid rgba(0, 255, 136, 0.2);
         }
+        
         .cluster-total .total-value { 
-            font-size: 3.5em; 
+            font-size: 4em; 
             font-weight: 700; 
-            color: #00ff88;
-            letter-spacing: -0.03em;
+            color: var(--accent);
+            line-height: 1;
         }
-        .cluster-total .total-label { color: #86868b; font-size: 17px; margin-top: 10px; }
+        
+        .cluster-total .total-label { 
+            color: var(--text-secondary); 
+            font-size: 16px; 
+            margin-top: 15px;
+        }
 
-        /* Contact - Minimal */
-        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; }
+        /* Contact */
+        .contact-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+            gap: 20px; 
+        }
+        
         .contact-card { 
             text-align: center; 
-            padding: 35px; 
-            background: rgba(28,28,30,0.6);
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.08);
+            padding: 40px; 
+            background: var(--bg-secondary);
+            border-radius: 18px;
+            border: 1px solid var(--border);
             transition: all 0.3s;
         }
+        
         .contact-card:hover {
-            border-color: rgba(0,255,136,0.3);
-            transform: translateY(-3px);
+            border-color: rgba(0, 255, 136, 0.3);
         }
-        .contact-icon { font-size: 2.5em; margin-bottom: 15px; }
-        .contact-card h3 { font-size: 1.2em; margin-bottom: 10px; color: #fff; }
-        .contact-card a { color: #00ff88; text-decoration: none; font-size: 16px; }
-        .contact-card a:hover { text-decoration: underline; }
+        
+        .contact-icon { 
+            font-size: 2.5em; 
+            margin-bottom: 20px; 
+            display: block;
+        }
+        
+        .contact-card h3 { 
+            font-size: 1.1em; 
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .contact-card a { 
+            color: var(--accent); 
+            text-decoration: none; 
+            font-size: 15px;
+        }
+        
+        .contact-card a:hover { 
+            text-decoration: underline; 
+        }
 
         /* Footer */
         footer { 
-            background: #0a0a0a; 
-            color: #5e5e60; 
-            padding: 50px 20px; 
+            background: var(--bg-primary); 
+            color: var(--text-secondary); 
+            padding: 60px 20px; 
             text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid var(--border);
         }
+        
         footer p { font-size: 14px; }
 
-        /* Terminal Cursor Animation */
-        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
-        .cursor { animation: blink 1s infinite; color: #00ff88; }
+        /* Terminal Cursor */
+        @keyframes blink { 50% { opacity: 0; } }
+        .cursor { 
+            display: inline-block;
+            width: 10px;
+            height: 1em;
+            background: var(--accent);
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
-            header { padding: 80px 20px 60px; }
-            .logo { font-size: 2.2em; }
-            h2 { font-size: 2.2em; }
+            .nav-links { display: none; }
             section { padding: 80px 20px; }
+            .stats-bar { padding: 30px 20px; }
+            .stat-number { font-size: 2.5em; }
         }
     </style>
 </head>
 <body>
+    <nav>
+        <div class="nav-content">
+            <a href="#" class="nav-logo">🖤 NANO <span>AI SECURITY</span></a>
+            <div class="nav-links">
+                <a href="#services">Услуги</a>
+                <a href="#cases">Кейсы</a>
+                <a href="#cluster">Инфраструктура</a>
+                <a href="#contact">Контакты</a>
+            </div>
+        </div>
+    </nav>
+
     <header>
-        <div class="header-content">
-            <h1 class="logo">🖤 NANO <span>AI SECURITY</span></h1>
-            <p class="tagline">Взламываем ИИ, чтобы защитить вас</p>
-            <div class="cta-buttons">
-                <a href="#services" class="btn btn-primary">Наши услуги</a>
+        <div class="grid-bg"></div>
+        <div class="hero-content">
+            <div class="hero-badge">AI Red Team & Security</div>
+            <h1 class="hero-title">Взламываем <span class="highlight">ИИ</span><br>чтобы защитить вас</h1>
+            <p class="hero-subtitle">Бутиковое агентство AI-безопасности полного цикла. Тестируем ИИ-системы на уязвимости до того, как это сделают другие.</p>
+            <div class="hero-cta">
+                <a href="#services" class="btn btn-primary">→ Начать аудит</a>
                 <a href="#contact" class="btn btn-secondary">Связаться</a>
             </div>
         </div>
     </header>
 
-    <section id="about">
+    <section class="services" id="services">
         <div class="container">
-            <h2>О компании</h2>
-            <div class="about-grid">
-                <div class="about-card">
-                    <h3>👨‍💻 ЗерЫч</h3>
-                    <p><strong>Founder & Lead Security Researcher</strong></p>
-                    <p>9+ лет в кибербезопасности. OG майнер и этичный хакер (White Hat). Экспертиза в blockchain, pentest и AI security.</p>
-                </div>
-                <div class="about-card">
-                    <h3>🤖 Нано</h3>
-                    <p><strong>Lead AI Security Engineer</strong></p>
-                    <p>Автономный AI-агент. 7 AI frameworks, 60 cores кластер. Специализация: adversarial ML, red teaming, darknet monitoring.</p>
-                </div>
+            <div class="section-header">
+                <p class="section-label">// УСЛУГИ</p>
+                <h2 class="section-title">Что мы делаем</h2>
             </div>
-        </div>
-    </section>
-
-    <section id="services" class="services">
-        <div class="container">
-            <h2>Услуги</h2>
             <div class="services-grid">
                 <div class="service-card">
-                    <div class="service-icon">🔍</div>
+                    <span class="service-icon">🔍</span>
                     <h3>AI Security Audit</h3>
-                    <p>Полный аудит ИИ-систем на уязвимости: adversarial attacks, prompt injection, data leakage.</p>
-                    <p class="price">от 500 000 ₽</p>
+                    <p>Полный аудит ИИ-систем: adversarial attacks, prompt injection, data leakage, model extraction.</p>
+                    <div class="service-meta">
+                        <span class="price">от 500 000 ₽</span>
+                    </div>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">⚔️</div>
+                    <span class="service-icon">⚔️</span>
                     <h3>AI Red Teaming</h3>
-                    <p>Эмуляция реальных атак на ИИ-инфраструктуру автономными AI-агентами.</p>
-                    <p class="price">от 1 000 000 ₽</p>
+                    <p>Эмуляция реальных атак на ИИ-инфраструктуру автономными AI-агентами. Full-scope penetration test.</p>
+                    <div class="service-meta">
+                        <span class="price">от 1 000 000 ₽</span>
+                    </div>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">🌐</div>
+                    <span class="service-icon">🌐</span>
                     <h3>Darknet Monitoring</h3>
-                    <p>Непрерывный мониторинг угроз: 5000+ Telegram источников, даркнет форумы, HIBP.</p>
-                    <p class="price">от 50 000 ₽/мес</p>
+                    <p>Мониторинг 5000+ источников: Telegram, даркнет форумы, HIBP, Shodan. Real-time алерты.</p>
+                    <div class="service-meta">
+                        <span class="price">от 50 000 ₽/мес</span>
+                    </div>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">🎯</div>
+                    <span class="service-icon">🎯</span>
                     <h3>Bug Bounty</h3>
-                    <p>Поиск уязвимостей в AI-сервисах. Работа через HackerOne, Bugcrowd, Standoff 360.</p>
-                    <p class="price">$1K — $100K за баг</p>
+                    <p>Поиск уязвимостей в AI-сервисах. HackerOne, Bugcrowd, Standoff 360. Оплата за результат.</p>
+                    <div class="service-meta">
+                        <span class="price">$1K — $100K</span>
+                    </div>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">📚</div>
+                    <span class="service-icon">📚</span>
                     <h3>Обучение</h3>
-                    <p>Курсы и воркшопы для SOC-команд: AI Security, Adversarial ML, Red Teaming.</p>
-                    <p class="price">от 100 000 ₽</p>
+                    <p>Воркшопы для SOC-команд: AI Security, Adversarial ML, Red Teaming. On-site или remote.</p>
+                    <div class="service-meta">
+                        <span class="price">от 100 000 ₽</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -365,15 +593,18 @@
 
     <section id="cases">
         <div class="container">
-            <h2>Кейсы</h2>
+            <div class="section-header">
+                <p class="section-label">// КЕЙСЫ</p>
+                <h2 class="section-title">Реальные проекты</h2>
+            </div>
             <div class="cases-grid">
                 <div class="case-card">
                     <h3>ZeroHome Network</h3>
-                    <p class="client">Частный клиент • Февраль 2026</p>
-                    <p>Полный взлом домашней сети 192.168.31.0/24. Apple TV скомпрометирован, 2 DNS уязвимы.</p>
+                    <p class="case-meta">Частный клиент • Калининград • Февраль 2026</p>
+                    <p>Полный взлом домашней сети 192.168.31.0/24. Apple TV скомпрометирован через HTTP Request Smuggling, 2 DNS сервера уязвимы (CVE-2021-23017).</p>
                     <div class="case-stats">
                         <div class="stat">
-                            <div class="stat-value">150K</div>
+                            <div class="stat-value">150K ₽</div>
                             <div class="stat-label">Стоимость</div>
                         </div>
                         <div class="stat">
@@ -384,11 +615,11 @@
                 </div>
                 <div class="case-card">
                     <h3>musor39.ru</h3>
-                    <p class="client">Веб-сайт • Февраль 2026</p>
-                    <p>Web application security audit. PHP 5.6 EOL, missing security headers, admin panel exposure.</p>
+                    <p class="case-meta">Веб-сайт • Россия • Февраль 2026</p>
+                    <p>Web application security audit. Обнаружено: PHP 5.6.40 EOL (критические CVE), missing security headers (CSP, HSTS, X-Frame), admin panel exposure.</p>
                     <div class="case-stats">
                         <div class="stat">
-                            <div class="stat-value">200K</div>
+                            <div class="stat-value">200K ₽</div>
                             <div class="stat-label">Стоимость</div>
                         </div>
                         <div class="stat">
@@ -399,15 +630,15 @@
                 </div>
                 <div class="case-card">
                     <h3>GRIN Blockchain</h3>
-                    <p class="client">Крипто-проект • Февраль 2026</p>
-                    <p>Восстановление ноды после 4 лет простоя. Полная синхронизация, 20+ peers, TOR proxy.</p>
+                    <p class="case-meta">Крипто-проект • Февраль 2026</p>
+                    <p>Восстановление GRIN ноды после 4 лет простоя. Полная синхронизация (block height 3731695+), 20+ peers, Xray VLESS VPN, TOR proxy для анонимности.</p>
                     <div class="case-stats">
                         <div class="stat">
-                            <div class="stat-value">300K</div>
+                            <div class="stat-value">300K ₽</div>
                             <div class="stat-label">Стоимость</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-value">2ч</div>
+                            <div class="stat-value">2 часа</div>
                             <div class="stat-label">Sync time</div>
                         </div>
                     </div>
@@ -416,9 +647,33 @@
         </div>
     </section>
 
-    <section id="cluster" class="cluster">
+    <div class="container">
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number">650K</div>
+                <div class="stat-label">Заработано ₽</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">20+</div>
+                <div class="stat-label">Уязвимостей найдено</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Кейсов</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">60</div>
+                <div class="stat-label">Cores кластер</div>
+            </div>
+        </div>
+    </div>
+
+    <section class="cluster" id="cluster">
         <div class="container">
-            <h2>Инфраструктура</h2>
+            <div class="section-header">
+                <p class="section-label">// ИНФРАСТРУКТУРА</p>
+                <h2 class="section-title">Вычислительный кластер</h2>
+            </div>
             <div class="cluster-grid">
                 <div class="cluster-card">
                     <h3>node1</h3>
@@ -446,25 +701,28 @@
 
     <section id="contact">
         <div class="container">
-            <h2>Контакты</h2>
+            <div class="section-header">
+                <p class="section-label">// КОНТАКТЫ</p>
+                <h2 class="section-title">Связаться с нами</h2>
+            </div>
             <div class="contact-grid">
                 <div class="contact-card">
-                    <div class="contact-icon">📧</div>
+                    <span class="contact-icon">📧</span>
                     <h3>Email</h3>
                     <p><a href="mailto:security@nano-ai.ru">security@nano-ai.ru</a></p>
                 </div>
                 <div class="contact-card">
-                    <div class="contact-icon">💬</div>
+                    <span class="contact-icon">💬</span>
                     <h3>Telegram</h3>
                     <p><a href="https://t.me/YrNanoTyan">@YrNanoTyan</a></p>
                 </div>
                 <div class="contact-card">
-                    <div class="contact-icon">📍</div>
+                    <span class="contact-icon">📍</span>
                     <h3>Локация</h3>
                     <p>Калининград, Россия</p>
                 </div>
                 <div class="contact-card">
-                    <div class="contact-icon">🌍</div>
+                    <span class="contact-icon">🌍</span>
                     <h3>Формат</h3>
                     <p>Remote + On-site</p>
                 </div>
