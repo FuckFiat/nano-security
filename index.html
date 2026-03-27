@@ -3,139 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NANO AI Security — Взламываем ИИ, чтобы защитить вас</title>
+    <title>NANO AI Security — AI Red Team & Security Audits</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Courier New', monospace; background: #0a0a0a; color: #00ff00; line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        header { text-align: center; padding: 60px 20px; border-bottom: 2px solid #00ff00; }
-        h1 { font-size: 3em; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; }
-        .tagline { font-size: 1.2em; color: #888; font-style: italic; }
-        .section { padding: 40px 20px; border-bottom: 1px solid #333; }
-        h2 { font-size: 2em; margin-bottom: 20px; color: #00ff00; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: #111; padding: 20px; border: 1px solid #333; border-radius: 5px; }
-        .card h3 { color: #00ff00; margin-bottom: 10px; }
-        .price { font-size: 1.5em; color: #ff0; margin: 10px 0; }
-        .btn { display: inline-block; padding: 10px 20px; background: #00ff00; color: #000; text-decoration: none; border-radius: 3px; font-weight: bold; margin-top: 10px; }
-        .btn:hover { background: #0f0; }
-        footer { text-align: center; padding: 40px 20px; color: #666; }
-        .emoji { font-size: 1.5em; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #fff; color: #1a1a1a; line-height: 1.6; }
+        
+        /* Header */
+        header { background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%); color: #fff; padding: 80px 20px 60px; }
+        .header-content { max-width: 1200px; margin: 0 auto; }
+        .logo { font-size: 2.5em; font-weight: 700; margin-bottom: 10px; }
+        .logo span { color: #3b82f6; }
+        .tagline { font-size: 1.3em; color: #9ca3af; font-weight: 300; margin-bottom: 30px; }
+        .cta-buttons { display: flex; gap: 15px; flex-wrap: wrap; }
+        .btn { padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.3s; }
+        .btn-primary { background: #3b82f6; color: #fff; }
+        .btn-primary:hover { background: #2563eb; transform: translateY(-2px); }
+        .btn-secondary { background: transparent; color: #fff; border: 2px solid #3b82f6; }
+        .btn-secondary:hover { background: #3b82f6; transform: translateY(-2px); }
+
+        /* Sections */
+        section { padding: 80px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h2 { font-size: 2.5em; font-weight: 700; margin-bottom: 40px; text-align: center; color: #1a1a1a; }
+        
+        /* About */
+        .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .about-card { background: #f9fafb; padding: 30px; border-radius: 12px; border-left: 4px solid #3b82f6; }
+        .about-card h3 { font-size: 1.5em; margin-bottom: 15px; color: #1a1a1a; }
+        .about-card p { color: #6b7280; line-height: 1.8; }
+
+        /* Services */
+        .services { background: #f9fafb; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .service-card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.3s; }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .service-icon { font-size: 3em; margin-bottom: 20px; }
+        .service-card h3 { font-size: 1.3em; margin-bottom: 15px; color: #1a1a1a; }
+        .service-card p { color: #6b7280; margin-bottom: 15px; }
+        .price { font-size: 1.4em; color: #3b82f6; font-weight: 600; }
+
+        /* Cases */
+        .cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .case-card { background: #fff; padding: 30px; border-radius: 12px; border: 1px solid #e5e7eb; }
+        .case-card h3 { font-size: 1.3em; margin-bottom: 10px; color: #1a1a1a; }
+        .case-card .client { color: #3b82f6; font-size: 0.9em; margin-bottom: 15px; }
+        .case-card p { color: #6b7280; margin-bottom: 15px; }
+        .case-stats { display: flex; gap: 20px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.5em; font-weight: 700; color: #3b82f6; }
+        .stat-label { font-size: 0.85em; color: #9ca3af; }
+
+        /* Cluster */
+        .cluster { background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%); color: #fff; }
+        .cluster h2 { color: #fff; }
+        .cluster-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .cluster-card { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 12px; text-align: center; }
+        .cluster-card h3 { font-size: 1.2em; margin-bottom: 10px; color: #fff; }
+        .cluster-card .specs { color: #9ca3af; font-size: 0.95em; }
+        .cluster-total { grid-column: 1 / -1; background: #3b82f6; padding: 30px; border-radius: 12px; text-align: center; margin-top: 20px; }
+        .cluster-total .total-value { font-size: 3em; font-weight: 700; }
+        .cluster-total .total-label { color: #9ca3af; }
+
+        /* Contact */
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .contact-card { text-align: center; padding: 30px; background: #f9fafb; border-radius: 12px; }
+        .contact-icon { font-size: 2.5em; margin-bottom: 15px; }
+        .contact-card h3 { font-size: 1.2em; margin-bottom: 10px; }
+        .contact-card a { color: #3b82f6; text-decoration: none; }
+        .contact-card a:hover { text-decoration: underline; }
+
+        /* Footer */
+        footer { background: #1a1a2e; color: #9ca3af; padding: 40px 20px; text-align: center; }
+        footer p { font-size: 0.9em; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header { padding: 60px 20px 40px; }
+            .logo { font-size: 2em; }
+            h2 { font-size: 2em; }
+            section { padding: 60px 20px; }
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>🖤 NANO AI SECURITY</h1>
-        <p class="tagline">Взламываем ИИ, чтобы защитить вас</p>
+        <div class="header-content">
+            <h1 class="logo">🖤 NANO <span>AI SECURITY</span></h1>
+            <p class="tagline">Взламываем ИИ, чтобы защитить вас</p>
+            <div class="cta-buttons">
+                <a href="#services" class="btn btn-primary">Наши услуги</a>
+                <a href="#contact" class="btn btn-secondary">Связаться</a>
+            </div>
+        </div>
     </header>
 
-    <div class="container">
-        <section class="section">
-            <h2>📊 О НАС</h2>
-            <div class="grid">
-                <div class="card">
+    <section id="about">
+        <div class="container">
+            <h2>О компании</h2>
+            <div class="about-grid">
+                <div class="about-card">
                     <h3>👨‍💻 ЗерЫч</h3>
-                    <p>Founder, OG майнер, этичный хакер (White Hat)</p>
-                    <p>9+ лет в кибербезопасности</p>
+                    <p><strong>Founder & Lead Security Researcher</strong></p>
+                    <p>9+ лет в кибербезопасности. OG майнер и этичный хакер (White Hat). Экспертиза в blockchain, pentest и AI security.</p>
                 </div>
-                <div class="card">
+                <div class="about-card">
                     <h3>🤖 Нано</h3>
-                    <p>Lead AI Security Engineer, автономный AI-агент</p>
-                    <p>7 AI frameworks, 60 cores кластер</p>
+                    <p><strong>Lead AI Security Engineer</strong></p>
+                    <p>Автономный AI-агент. 7 AI frameworks, 60 cores кластер. Специализация: adversarial ML, red teaming, darknet monitoring.</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="section">
-            <h2>🎯 УСЛУГИ</h2>
-            <div class="grid">
-                <div class="card">
-                    <h3>🔍 AI Security Audit</h3>
-                    <p>Полный аудит ИИ-систем на уязвимости</p>
+    <section id="services" class="services">
+        <div class="container">
+            <h2>Услуги</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🔍</div>
+                    <h3>AI Security Audit</h3>
+                    <p>Полный аудит ИИ-систем на уязвимости: adversarial attacks, prompt injection, data leakage.</p>
                     <p class="price">от 500 000 ₽</p>
-                    <a href="mailto:security@nano-ai.ru" class="btn">Заказать</a>
                 </div>
-                <div class="card">
-                    <h3>⚔️ AI Red Teaming</h3>
-                    <p>Эмуляция реальных атак на ИИ-инфраструктуру</p>
+                <div class="service-card">
+                    <div class="service-icon">⚔️</div>
+                    <h3>AI Red Teaming</h3>
+                    <p>Эмуляция реальных атак на ИИ-инфраструктуру автономными AI-агентами.</p>
                     <p class="price">от 1 000 000 ₽</p>
-                    <a href="mailto:security@nano-ai.ru" class="btn">Заказать</a>
                 </div>
-                <div class="card">
-                    <h3>🌐 Darknet Monitoring</h3>
-                    <p>Непрерывный мониторинг угроз 24/7</p>
+                <div class="service-card">
+                    <div class="service-icon">🌐</div>
+                    <h3>Darknet Monitoring</h3>
+                    <p>Непрерывный мониторинг угроз: 5000+ Telegram источников, даркнет форумы, HIBP.</p>
                     <p class="price">от 50 000 ₽/мес</p>
-                    <a href="mailto:security@nano-ai.ru" class="btn">Подписаться</a>
                 </div>
-                <div class="card">
-                    <h3>🎯 Bug Bounty</h3>
-                    <p>Поиск уязвимостей в AI-сервисах</p>
-                    <p class="price">$1K - $100K за баг</p>
-                    <a href="mailto:security@nano-ai.ru" class="btn">Участвовать</a>
+                <div class="service-card">
+                    <div class="service-icon">🎯</div>
+                    <h3>Bug Bounty</h3>
+                    <p>Поиск уязвимостей в AI-сервисах. Работа через HackerOne, Bugcrowd, Standoff 360.</p>
+                    <p class="price">$1K — $100K за баг</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📚</div>
+                    <h3>Обучение</h3>
+                    <p>Курсы и воркшопы для SOC-команд: AI Security, Adversarial ML, Red Teaming.</p>
+                    <p class="price">от 100 000 ₽</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="section">
-            <h2>🏆 КЕЙСЫ</h2>
-            <div class="grid">
-                <div class="card">
+    <section id="cases">
+        <div class="container">
+            <h2>Кейсы</h2>
+            <div class="cases-grid">
+                <div class="case-card">
                     <h3>ZeroHome Network</h3>
-                    <p>Взлом домашней сети 192.168.31.0/24</p>
-                    <p>Apple TV скомпрометирован, 2 DNS уязвимы</p>
-                    <p class="price">150 000 ₽</p>
+                    <p class="client">Частный клиент, Калининград • Февраль 2026</p>
+                    <p>Полный взлом домашней сети 192.168.31.0/24. Apple TV скомпрометирован, 2 DNS уязвимы.</p>
+                    <div class="case-stats">
+                        <div class="stat">
+                            <div class="stat-value">150K</div>
+                            <div class="stat-label">Стоимость</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Уязвимости</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card">
+                <div class="case-card">
                     <h3>musor39.ru</h3>
-                    <p>Web application security audit</p>
-                    <p>PHP 5.6 EOL, Missing Headers</p>
-                    <p class="price">200 000 ₽</p>
+                    <p class="client">Веб-сайт, Россия • Февраль 2026</p>
+                    <p>Web application security audit. PHP 5.6 EOL, missing security headers, admin panel exposure.</p>
+                    <div class="case-stats">
+                        <div class="stat">
+                            <div class="stat-value">200K</div>
+                            <div class="stat-label">Стоимость</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">4</div>
+                            <div class="stat-label">Уязвимости</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card">
+                <div class="case-card">
                     <h3>GRIN Blockchain</h3>
-                    <p>Восстановление ноды после 4 лет</p>
-                    <p>Full sync, 20+ peers, TOR proxy</p>
-                    <p class="price">300 000 ₽</p>
+                    <p class="client">Крипто-проект • Февраль 2026</p>
+                    <p>Восстановление ноды после 4 лет простоя. Полная синхронизация, 20+ peers, TOR proxy.</p>
+                    <div class="case-stats">
+                        <div class="stat">
+                            <div class="stat-value">300K</div>
+                            <div class="stat-label">Стоимость</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">2ч</div>
+                            <div class="stat-label">Sync time</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="section">
-            <h2>🔥 КЛАСТЕР</h2>
-            <div class="grid">
-                <div class="card">
+    <section id="cluster" class="cluster">
+        <div class="container">
+            <h2>Инфраструктура</h2>
+            <div class="cluster-grid">
+                <div class="cluster-card">
                     <h3>node1</h3>
-                    <p>AMD Ryzen 9 5950X (32 cores)</p>
-                    <p>30 GB RAM, RTX 3090</p>
+                    <p class="specs">AMD Ryzen 9 5950X<br>32 cores / 30 GB RAM<br>RTX 3090 24GB</p>
                 </div>
-                <div class="card">
+                <div class="cluster-card">
                     <h3>mini</h3>
-                    <p>Apple M4 (10 cores)</p>
-                    <p>24 GB RAM</p>
+                    <p class="specs">Apple M4<br>10 cores / 24 GB RAM<br>Primary Compute</p>
                 </div>
-                <div class="card">
+                <div class="cluster-card">
                     <h3>zero3</h3>
-                    <p>Apple M1 Pro (10 cores)</p>
-                    <p>16 GB RAM</p>
+                    <p class="specs">Apple M1 Pro<br>10 cores / 16 GB RAM<br>RAM Heavy</p>
                 </div>
-                <div class="card">
-                    <h3>ИТОГО</h3>
-                    <p>60 cores</p>
-                    <p>78 GB RAM</p>
+                <div class="cluster-card">
+                    <h3>macbook</h3>
+                    <p class="specs">Apple M1<br>8 cores / 8 GB RAM<br>Light Tasks</p>
+                </div>
+                <div class="cluster-total">
+                    <div class="total-value">60 cores / 78 GB RAM</div>
+                    <div class="total-label">Распределённый кластер для AI/ML вычислений</div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="section">
-            <h2>📞 КОНТАКТЫ</h2>
-            <div class="card">
-                <p><span class="emoji">📧</span> Email: security@nano-ai.ru</p>
-                <p><span class="emoji">💬</span> Telegram: @YrNanoTyan</p>
-                <p><span class="emoji">📍</span> Location: Калининград, Россия</p>
-                <p><span class="emoji">🌍</span> Формат: Remote + On-site</p>
+    <section id="contact">
+        <div class="container">
+            <h2>Контакты</h2>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon">📧</div>
+                    <h3>Email</h3>
+                    <p><a href="mailto:security@nano-ai.ru">security@nano-ai.ru</a></p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">💬</div>
+                    <h3>Telegram</h3>
+                    <p><a href="https://t.me/YrNanoTyan">@YrNanoTyan</a></p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">📍</div>
+                    <h3>Локация</h3>
+                    <p>Калининград, Россия</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">🌍</div>
+                    <h3>Формат</h3>
+                    <p>Remote + On-site</p>
+                </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 
     <footer>
         <p>NANO AI Security © 2026. All rights reserved.</p>
